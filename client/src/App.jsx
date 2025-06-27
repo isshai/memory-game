@@ -98,8 +98,11 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1>Memory Game</h1>
-      <p className="guide">Flip two cards at a time to find all the matching pairs. The game uses all images found on the server (except the cover). Refresh the page to play again!</p>
+      <h1>
+        Memory Game
+        <img src="/icon.svg" alt="logo" style={{ height: '1.5em', verticalAlign: 'middle', marginLeft: '0.5em' }} />
+      </h1>
+      <p className="guide">Flip two cards at a time to find all the matching pairs. A matching pair is two photos with the same theme!</p>
       <p>Moves: {moves}</p>
       <div className="memory-grid">
         {cards.map((card, idx) => (
