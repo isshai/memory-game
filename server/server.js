@@ -149,6 +149,14 @@ async function downloadAllPhotosToTemp() {
 // Call the function after MongoDB is connected
 mongoose.connection.once('open', downloadAllPhotosToTemp);
 
+// Serve React build (client/dist) in production
+const clientBuildPath = path.join(__dirname, '../client/dist');
+if (fs.existsSync(clientBuildPath)) {
+    app.use(express.static(clientBuildPath));
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(clientBuildPath, 'index.html'));
+    });
+}
 
 app.listen(PORT, () => {
     console.log(`Backend server running on http://localhost:${PORT}`);

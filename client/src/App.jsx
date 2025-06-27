@@ -19,7 +19,9 @@ function App() {
   const [showBirthday, setShowBirthday] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/images')
+    // For local development, use:
+    // fetch('http://localhost:3001/api/images')
+    fetch('/api/images')
       .then(res => res.json())
       .then(data => {
         // Exclude cover.jpg from the game images
@@ -114,14 +116,17 @@ function App() {
             <div className="card-inner">
               <div className="card-front"></div>
               <div className="card-back">
-                <img src={`http://localhost:3001${card.img}`} alt="memory" />
+                {/* <img src={`http://localhost:3001${card.img}`} alt="memory" /> */}
+                <img src={`${card.img}`} alt="memory" />
               </div>
             </div>
           </div>
         ))}
       </div>
       {showBirthday && (
-        <div className="birthday-overlay" style={{ backgroundImage: `url('http://localhost:3001/images/cover.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="birthday-overlay" style={{ backgroundImage: `url('/images/cover.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+
+          {/* <div className="birthday-overlay" style={{ backgroundImage: `url('/images/cover.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}> */}
           <div className="birthday-heart">💜</div>
           <div className="birthday-message" style={{ background: 'rgba(0,0,0,0.5)', color: '#fff', borderRadius: '24px', padding: '2rem 3rem', fontSize: '2rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
             Sabrina I love you,<br />happy birthday!
