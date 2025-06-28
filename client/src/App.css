@@ -118,6 +118,27 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 6px;
   }
+
+  .birthday-overlay {
+    background-size: cover !important;
+    background-position: left center !important;
+    min-height: 100vh;
+    min-width: 100vw;
+    padding: 0;
+  }
+
+  .birthday-message {
+    font-size: 1.1rem;
+    padding: 1rem 0.5rem;
+    margin-bottom: 1rem;
+    width: 90vw;
+    box-sizing: border-box;
+  }
+
+  .birthday-heart {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
 }
 
 .birthday-overlay {
