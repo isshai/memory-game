@@ -17,6 +17,9 @@ function App() {
   const [matched, setMatched] = useState([]);
   const [moves, setMoves] = useState(0);
   const [showBirthday, setShowBirthday] = useState(false);
+  const [popupImg, setPopupImg] = useState(null);
+  const [popupTimeout, setPopupTimeout] = useState(null);
+  const [pendingFlip, setPendingFlip] = useState(null);
 
   useEffect(() => {
     // For local development, use:
@@ -54,27 +57,32 @@ function App() {
   }, [matched, images]);
 
   const handleFlip = idx => {
-    if (flipped.length === 2 || flipped.includes(idx) || matched.includes(cards[idx].img)) return;
-    const newFlipped = [...flipped, idx];
-    setFlipped(newFlipped);
-    if (newFlipped.length === 2) {
-      setMoves(moves + 1);
-      const [first, second] = newFlipped;
-      // Check if the two images are a pair (same base name, different -a/-b)
-      const getPairName = img => {
-        const match = img.match(/([^/\\]+)-(a|b)\./i);
-        return match ? match[1] : img;
-      };
-      if (
-        getPairName(cards[first].img) === getPairName(cards[second].img) &&
-        cards[first].img !== cards[second].img
-      ) {
-        setMatched([...matched, cards[first].img, cards[second].img]);
-        setTimeout(() => setFlipped([]), 800);
-      } else {
-        setTimeout(() => setFlipped([]), 800);
+    if (flipped.length === 2 || flipped.includes(idx) || matched.includes(cards[idx].img) || popupImg) return;
+    setPopupImg(cards[idx].img);
+    const popup = setTimeout(() => {
+      setPopupImg(null);
+      // After popup, handle flip logic
+      const newFlipped = [...flipped, idx];
+      setFlipped(newFlipped);
+      if (newFlipped.length === 2) {
+        setMoves(m => m + 1);
+        const [first, second] = newFlipped;
+        const getPairName = img => {
+          const match = img.match(/([^/\\]+)-(a|b)\./i);
+          return match ? match[1] : img;
+        };
+        if (
+          getPairName(cards[first].img) === getPairName(cards[second].img) &&
+          cards[first].img !== cards[second].img
+        ) {
+          setMatched(matched => [...matched, cards[first].img, cards[second].img]);
+          setTimeout(() => setFlipped([]), 800);
+        } else {
+          setTimeout(() => setFlipped([]), 1000);
+        }
       }
-    }
+    }, 1200); // popup for 1.5s
+    setPopupTimeout(popup);
   };
 
   const resetGame = () => {
@@ -116,13 +124,37 @@ function App() {
             <div className="card-inner">
               <div className="card-front"></div>
               <div className="card-back">
-                {/* <img src={`http://localhost:3001${card.img}`} alt="memory" /> */}
                 <img src={`${card.img}`} alt="memory" />
               </div>
             </div>
           </div>
         ))}
       </div>
+      {popupImg && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          background: 'rgba(0,0,0,0.5)',
+          zIndex: 2000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <img src={popupImg} alt="popup" style={{
+            width: 400,
+            height: 400,
+            maxWidth: '98vw',
+            maxHeight: '98vh',
+            borderRadius: '18px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+            background: '#fff',
+            objectFit: 'contain',
+          }} />
+        </div>
+      )}
       {showBirthday && (
         <div className="birthday-overlay" style={{ backgroundImage: `url('/images/cover.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
 
